@@ -1,5 +1,15 @@
 # Finanças Pessoais
 
+![Node.js](https://img.shields.io/badge/Node.js-43853D?style=for-the-badge&logo=node.js&logoColor=white)
+![Express.js](https://img.shields.io/badge/Express.js-000000?style=for-the-badge&logo=express&logoColor=white)
+![Knex.js](https://img.shields.io/badge/Knex.js-D26C0D?style=for-the-badge&logo=knex.js&logoColor=white)
+![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
+![Chart.js](https://img.shields.io/badge/Chart.js-FF6384?style=for-the-badge&logo=chartdotjs&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
+
+---
+
 ## Visão Geral do Projeto
 
 O **Finanças Pessoais** é uma aplicação web intuitiva para gerenciamento financeiro pessoal. Desenvolvida para ser o seu principal painel de controle, ela oferece uma visão clara e objetiva sobre suas receitas, despesas e saldo, ajudando você a tomar decisões financeiras mais inteligentes.
@@ -63,7 +73,7 @@ Abra seu navegador e acesse:
 
 http://localhost:3000
 
-🛠 Tecnologias Utilizadas
+### 🛠 Tecnologias Utilizadas
 
 Back-end:
 
