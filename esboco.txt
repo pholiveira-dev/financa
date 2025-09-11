@@ -9,7 +9,7 @@ id (PK)
 nome (ex.: “Cartão Nubank”, “Conta Bradesco”)
 
 tipo (débito, crédito, dinheiro, pix, etc.)
-
+                                                                       
 limite (opcional, para cartões de crédito)
 
 criado_em

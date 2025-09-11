@@ -23,9 +23,18 @@ async function updateUser(id, userData) {
     return update;
 }
 
+async function deleteUser(id) {
+    const [deleted] = await knex(TABLE_NAME)
+    .where({ id })
+    .del()
+    .returning('*');
+    return deleted;
+}
+
 module.exports = {
     findAllUsers,
     findUser,
     createUser,
-    updateUser
+    updateUser,
+    deleteUser
 }

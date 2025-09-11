@@ -1,0 +1,38 @@
+const knex = require('../knex');
+
+const TABLE_NAME = accounts;
+
+class accountsModel {
+    static async findById(id) {
+        return knex(TABLE_NAME).where({ id }).first();
+    }
+
+    static async findAll() {
+        return knex(TABLE_NAME).select('*');
+    }
+
+    static async createAccounts(accountsData) {
+        const [newAccount] = await knex(TABLE_NAME)
+        .insert(data)
+        .returning('*');
+        return newAccount;
+    }
+
+    static async updateAccounts(id, accountsData) {
+        const [update] = await knex(TABLE_NAME)
+        .where({ id })
+        .update(data)
+        .returning('*');
+        return update;
+    }
+
+    static async deleteAccounts(id) {
+        const [deleted] = await knex(TABLE_NAME)
+        .where({ id })
+        .del()
+        .returning('*');
+        return deleted;
+    }
+}
+
+module.exports = accountsModel;
