@@ -29,3 +29,65 @@ Certifique-se de ter o [Node.js](https://nodejs.org/) e o [npm](https://www.npmj
 ```bash
 git clone [https://github.com/seu-usuario/seu-repositorio.git](https://github.com/seu-usuario/seu-repositorio.git)
 cd seu-repositorio
+
+2. Instalar as Dependências
+
+Instale todas as dependências do projeto, tanto para o front-end quanto para o back-end.
+Bash
+
+npm install
+
+3. Configurar o Banco de Dados
+
+Este projeto utiliza o Knex.js para gerenciar o banco de dados.
+Primeiro, crie a configuração do seu banco de dados no arquivo knexfile.js.
+
+Em seguida, execute as migrações para criar as tabelas no seu banco de dados:
+Bash
+
+npx knex migrate:latest
+
+4. Iniciar o Servidor
+
+Para iniciar o servidor em ambiente de desenvolvimento, utilize o Nodemon para que as alterações de código sejam reiniciadas automaticamente.
+Bash
+
+npm run dev
+
+(Se você não configurou o script "dev" no package.json, use nodemon server.js ou node server.js)
+
+5. Acessar a Aplicação
+
+Abra seu navegador e acesse:
+
+http://localhost:3000
+
+🛠 Tecnologias Utilizadas
+
+Back-end:
+
+    Node.js: Ambiente de execução JavaScript.
+
+    Express.js: Framework web para Node.js.
+
+    Knex.js: Construtor de consultas SQL para interagir com o banco de dados.
+
+Front-end:
+
+    HTML5: Estrutura da aplicação.
+
+    CSS3: Estilização.
+
+    Tailwind CSS: Framework utilitário de CSS para design rápido e responsivo.
+
+    JavaScript: Lógica de interatividade do front-end.
+
+    Chart.js: Biblioteca para criação de gráficos.
+
+📄 Licença
+
+Este projeto está sob a licença MIT. Para mais detalhes, veja o arquivo LICENSE.
+
+🤝 Contribuições
+
+Contribuições, sugestões e relatórios de bugs são bem-vindos! Sinta-se à vontade para abrir uma issue ou enviar um pull request.
