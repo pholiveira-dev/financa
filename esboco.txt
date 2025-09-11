@@ -1,0 +1,138 @@
+3. Contas / formas de pagamento
+
+Aqui você diferencia débito, crédito, carteira, pix, etc.
+
+accounts
+
+id (PK)
+
+nome (ex.: “Cartão Nubank”, “Conta Bradesco”)
+
+tipo (débito, crédito, dinheiro, pix, etc.)
+
+limite (opcional, para cartões de crédito)
+
+criado_em
+
+4. Transações (o coração do sistema)
+
+Toda entrada/saída de dinheiro vai aqui.
+
+transactions
+
+id (PK)
+
+user_id (FK → users)
+
+category_id (FK → categories)
+
+account_id (FK → accounts)
+
+tipo (entrada, saída)
+
+valor
+
+descrição
+
+data
+
+5. Gastos fixos (mensais)
+
+Você pode tratar como uma tabela separada, ou apenas usar transactions com flag de recorrência.
+Se quiser separado:
+
+recurring_expenses
+
+id (PK)
+
+user_id (FK → users)
+
+category_id (FK → categories)
+
+account_id (FK → accounts)
+
+valor
+
+descrição
+
+dia_vencimento
+
+ativo (boolean)
+
+📊 Exemplo de consultas que isso permite
+
+“Quanto gastei no cartão de crédito Nubank em agosto?”
+
+“Quais são meus gastos fixos mensais?”
+
+“Quanto entrou e saiu por categoria no último mês?”
+
+################## FRONT-END ##################
+
+    Front-end (A Interface):
+
+        Dashboard: Esta é a página principal após o login. Use-a para mostrar um resumo visual. A ideia é apresentar as informações mais importantes de forma rápida.
+
+        Páginas de Gerenciamento:
+
+            Página de Transações: Para listar, adicionar e editar gastos e receitas.
+
+            Página de Categorias: Onde o usuário pode ver e gerenciar as categorias.
+
+            Página de Contas: Para gerenciar as diferentes formas de pagamento.
+
+Sugestões de Front-end para o seu Projeto (Dando Vida à Parte Criativa)
+
+A parte criativa realmente pode ser um desafio, mas focar em simplicidade e funcionalidade é o segredo para um bom projeto de portfólio. As ideias a seguir podem servir como um ponto de partida para o design.
+
+1. Dashboard (Visão Geral)
+
+    O que mostrar? Gráficos! Gráficos são ótimos para dashboards.
+
+        Gráfico de pizza ou de barra: Mostre a distribuição de gastos por categoria no mês atual. Isso responde à pergunta "Onde estou gastando mais?".
+
+        Saldo Total: Um número grande e destacado com o saldo atual de todas as contas.
+
+        Entradas vs. Saídas: Um gráfico de barras ou de linha mostrando a receita e a despesa mês a mês.
+
+    Layout:
+
+        Use um layout de cartões. Cada "bloco" de informação (saldo, gráfico de gastos, etc.) fica dentro de um cartão com bordas arredondadas e uma sombra sutil. Isso organiza a interface e a deixa mais profissional.
+
+        Menu lateral (sidebar): Um menu fixo na lateral esquerda com ícones para navegar entre o Dashboard, Transações, Categorias, etc. Isso melhora a usabilidade.
+
+2. Página de Transações (Entradas e Saídas)
+
+    O que mostrar? Uma tabela ou uma lista simples.
+
+        Liste todas as transações em ordem cronológica inversa (da mais recente para a mais antiga).
+
+        Inclua colunas para Data, Descrição, Valor, Categoria e Conta.
+
+        Use cores para destacar. Por exemplo, texto verde para entradas e vermelho para saídas.
+
+    Funcionalidades:
+
+        Adicione um botão de "Nova Transação" no topo da página. Ao clicar, um modal (uma janela pop-up) pode aparecer com um formulário simples para o usuário inserir os dados da nova transação.
+
+        Ícones de lápis (editar) e lixeira (deletar) ao lado de cada transação.
+
+3. Formulário de Nova Transação (Modal)
+
+    Simplicidade é chave.
+
+        Campos para:
+
+            Descrição (texto)
+
+            Valor (número)
+
+            Tipo (Entrada/Saída - use um radio button ou toggle switch para facilitar)
+
+            Categoria (um dropdown com as categorias do seu banco de dados)
+
+            Conta (um dropdown com as contas do seu banco de dados)
+
+            Data (campo de data)
+
+    Dica: Conecte o tipo (entrada/saída) com o campo valor. Por exemplo, quando o usuário seleciona "Saída", o campo de valor já pode ser exibido com um sinal de negativo (-).
