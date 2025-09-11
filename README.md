@@ -24,9 +24,10 @@ Siga estes passos para configurar e rodar o projeto em sua máquina local.
 
 Certifique-se de ter o [Node.js](https://nodejs.org/) e o [npm](https://www.npmjs.com/) instalados.
 
-### 1. Clonar o Repositório
-
 ```bash
+
+1. Clonar o Repositório
+
 git clone [https://github.com/seu-usuario/seu-repositorio.git](https://github.com/seu-usuario/seu-repositorio.git)
 cd seu-repositorio
 
