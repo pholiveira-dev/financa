@@ -3,7 +3,7 @@ const knex = require('../knex');
 const TABLE_NAME = 'user';
 
 class userModel {
-    static async findUser(id) {
+    static async findUsers(id) {
         return knex(TABLE_NAME).where({ id }).first();
     }
 
@@ -11,12 +11,12 @@ class userModel {
         return knex(TABLE_NAME).select('*');
     }
 
-    static async createUser(userData) {
+    static async createUsers(userData) {
         const [newUser] = await knex(TABLE_NAME).insert(userData).returning('*');
         return newUser;
     }
 
-    static async updateUser(id, userData) {
+    static async updateUsers(id, userData) {
     const [update] = await knex(TABLE_NAME)
     .where({ id })
     .update(userData)
@@ -24,7 +24,7 @@ class userModel {
     return update;
     }
 
-    static async deleteUser(id) {
+    static async deleteUsers(id) {
         const [deleted] = await knex(TABLE_NAME)
         .where({ id })
         .del()
@@ -34,4 +34,4 @@ class userModel {
 
 }
 
-module.exports = { userModel };
+module.exports = userModel;

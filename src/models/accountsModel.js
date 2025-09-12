@@ -3,11 +3,11 @@ const knex = require('../knex');
 const TABLE_NAME = 'accounts';
 
 class accountsModel {
-    static async findById(id) {
+    static async findByIdAccounts(id) {
         return knex(TABLE_NAME).where({ id }).first();
     }
 
-    static async findAll() {
+    static async findAllAccounts() {
         return knex(TABLE_NAME).select('*');
     }
 
