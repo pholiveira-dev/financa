@@ -2,39 +2,36 @@ const knex = require('../knex');
 
 const TABLE_NAME = 'user';
 
-async function findUser(id) {
-    return knex(TABLE_NAME).where({ id }).first();
-}
+class userModel {
+    static async findUser(id) {
+        return knex(TABLE_NAME).where({ id }).first();
+    }
 
-async function findAllUsers() {
-    return knex(TABLE_NAME).select('*');
-}
+    static async findAllUsers() {
+        return knex(TABLE_NAME).select('*');
+    }
 
-async function createUser(userData) {
-    const [newUser] = await knex(TABLE_NAME).insert(userData).returning('*');
-    return newUser;
-}
+    static async createUser(userData) {
+        const [newUser] = await knex(TABLE_NAME).insert(userData).returning('*');
+        return newUser;
+    }
 
-async function updateUser(id, userData) {
+    static async updateUser(id, userData) {
     const [update] = await knex(TABLE_NAME)
     .where({ id })
     .update(userData)
     .returning('*');
     return update;
+    }
+
+    static async deleteUser(id) {
+        const [deleted] = await knex(TABLE_NAME)
+        .where({ id })
+        .del()
+        .returning('*');
+        return deleted;
+    }
+
 }
 
-async function deleteUser(id) {
-    const [deleted] = await knex(TABLE_NAME)
-    .where({ id })
-    .del()
-    .returning('*');
-    return deleted;
-}
-
-module.exports = {
-    findAllUsers,
-    findUser,
-    createUser,
-    updateUser,
-    deleteUser
-}
+module.exports = { userModel };

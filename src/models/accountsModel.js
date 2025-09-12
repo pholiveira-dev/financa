@@ -1,6 +1,6 @@
 const knex = require('../knex');
 
-const TABLE_NAME = accounts;
+const TABLE_NAME = 'accounts';
 
 class accountsModel {
     static async findById(id) {
@@ -13,7 +13,7 @@ class accountsModel {
 
     static async createAccounts(accountsData) {
         const [newAccount] = await knex(TABLE_NAME)
-        .insert(data)
+        .insert(accountsData)
         .returning('*');
         return newAccount;
     }
@@ -21,7 +21,7 @@ class accountsModel {
     static async updateAccounts(id, accountsData) {
         const [update] = await knex(TABLE_NAME)
         .where({ id })
-        .update(data)
+        .update(accountsData)
         .returning('*');
         return update;
     }
