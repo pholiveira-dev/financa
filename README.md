@@ -17,7 +17,7 @@ O **Finanças Pessoais** é uma aplicação web intuitiva para gerenciamento fin
 Este projeto foi construído do zero como um estudo prático de desenvolvimento full-stack, com foco em:
 * **Back-end robusto:** Construído com Node.js, Express e Knex.js para uma API RESTful e manipulação de banco de dados.
 * **Front-end moderno:** Interface de usuário fluida e responsiva, utilizando HTML, CSS (com Tailwind CSS) e JavaScript Vanilla.
-* **Visualização de dados:** Gráficos interativos para uma análise financeira detalhada.
+* **Visualização de dados:** Gráficos interativos para uma análise financeira mais detalhada.
 
 ---
 
@@ -26,6 +26,14 @@ Este projeto foi construído do zero como um estudo prático de desenvolvimento 
 A arquitetura do banco de dados foi projetada para ser robusta e escalável. O modelo de dados centraliza as transações, conectando-as a usuários, contas e categorias, garantindo uma gestão financeira organizada e eficiente.
 
 ![Diagrama do Banco de Dados](image/projeto-financa.jpg)
+
+---
+
+## Status do Projeto
+
+Acompanhe o progresso deste projeto em tempo real através do meu quadro Kanban.
+
+🔗 [Acompanhe o Projeto no GitHub](https://github.com/users/pholiveira-dev/projects/4)
 
 ---
 
