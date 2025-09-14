@@ -3,7 +3,7 @@
 ![Node.js](https://img.shields.io/badge/Node.js-43853D?style=for-the-badge&logo=node.js&logoColor=white)
 ![Express.js](https://img.shields.io/badge/Express.js-000000?style=for-the-badge&logo=express&logoColor=white)
 ![Knex.js](https://img.shields.io/badge/Knex.js-D26C0D?style=for-the-badge&logo=knex.js&logoColor=white)
-![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
+![JavaScript](https://img.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
 ![Chart.js](https://img.shields.io/badge/Chart.js-FF6384?style=for-the-badge&logo=chartdotjs&logoColor=white)
 ![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
@@ -39,6 +39,7 @@ Acompanhe o progresso deste projeto em tempo real através do meu quadro Kanban.
 
 ## Funcionalidades
 
+* **Sistema de Autenticação:** Registro e login de usuários para garantir a segurança e a personalização de dados.
 * **Dashboard Interativa:** Visualize seu saldo total e a distribuição de gastos por categoria através de gráficos de pizza e de barras.
 * **Gerenciamento de Transações:** Adicione, edite e delete entradas e saídas de forma simples.
 * **Registro de Contas:** Gerencie suas diferentes contas bancárias, cartões de crédito e carteiras.
@@ -57,7 +58,7 @@ Certifique-se de ter o [Node.js](https://nodejs.org/) e o [npm](https://www.npmj
 ```bash
 1. Clonar o Repositório
 
-git clone [https://github.com/seu-usuario/seu-repositorio.git](https://github.com/seu-usuario/seu-repositorio.git)
+git clone [https://github.com/seu-usuario/seu-repositorio.e](https://github.com/seu-usuario/seu-repositorio.git)
 cd seu-repositorio
 
 2. Instalar as Dependências
