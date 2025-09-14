@@ -25,7 +25,7 @@ Este projeto foi construído do zero como um estudo prático de desenvolvimento 
 
 A arquitetura do banco de dados foi projetada para ser robusta e escalável. O modelo de dados centraliza as transações, conectando-as a usuários, contas e categorias, garantindo uma gestão financeira organizada e eficiente.
 
-![Diagrama do Banco de Dados](projeto-financa.jpg)
+![Diagrama do Banco de Dados](images/projeto-financa.jpg)
 
 ---
 
