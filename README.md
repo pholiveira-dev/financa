@@ -27,6 +27,16 @@ A arquitetura do banco de dados foi projetada para ser robusta e escalável. O m
 
 ![Diagrama do Banco de Dados](image/projeto-financa.jpg)
 
+A arquitetura do banco de dados foi desenhada para ser robusta e escalável, refletindo a estrutura lógica da aplicação. O modelo de dados foi concebido para centralizar as transações e conectá-las a usuários, contas e categorias, garantindo uma gestão financeira organizada e eficiente.
+
+Principais Mudanças:
+
+    Nomenclatura no plural: Todas as tabelas agora estão no plural (users, accounts, transactions, categories, recurringExpenses). Essa é uma convenção de mercado que padroniza o nome das coleções de dados, facilitando a leitura e a manutenção do código.
+
+    Melhoria na relação users e accounts: A tabela users não possui mais a chave estrangeira account_id. Essa mudança corrige a modelagem, pois um usuário pode ter várias contas, e não apenas uma. A nova estrutura agora estabelece uma relação um-para-muitos (one-to-many), onde a tabela accounts armazena a chave estrangeira user_id. Isso permite que um único usuário possa gerenciar múltiplas contas bancárias, cartões de crédito ou carteiras dentro da aplicação.
+
+Essa arquitetura robusta garante que o MoneyHub possa crescer, suportando novas funcionalidades e um maior volume de dados sem comprometer a integridade e a performance.
+
 ---
 
 ## Status do Projeto
