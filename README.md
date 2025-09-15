@@ -12,7 +12,7 @@
 
 ## Visão Geral do Projeto
 
-O **Finanças Pessoais** é uma aplicação web intuitiva para gerenciamento financeiro pessoal. Desenvolvida para ser o seu principal painel de controle, ela oferece uma visão clara e objetiva sobre suas receitas, despesas e saldo, ajudando você a tomar decisões financeiras mais inteligentes.
+O **MoneyHub** é uma aplicação web intuitiva para gerenciamento financeiro pessoal. Desenvolvida para ser o seu principal painel de controle, ela oferece uma visão clara e objetiva sobre suas receitas, despesas e saldo, ajudando você a tomar decisões financeiras mais inteligentes.
 
 Este projeto foi construído do zero como um estudo prático de desenvolvimento full-stack, com foco em:
 * **Back-end robusto:** Construído com Node.js, Express e Knex.js para uma API RESTful e manipulação de banco de dados.
