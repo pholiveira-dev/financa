@@ -1,7 +1,5 @@
-const { table } = require("console");
-
 exports.up = function(knex) {
-  return knex.schema.createTable('user', (table) => {
+  return knex.schema.createTable('users', (table) => {
     table.increments('id').primary();
     table.string('nome').notNullable();
     table.string('email').notNullable().unique();
@@ -11,5 +9,5 @@ exports.up = function(knex) {
 };
 
 exports.down = function(knex) {
-  return knex.schema.dropTable('user');
+  return knex.schema.dropTable('users');
 };
