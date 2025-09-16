@@ -47,6 +47,22 @@ Acompanhe o progresso deste projeto em tempo real através do meu quadro Kanban.
 
 ---
 
+## 📸 Demonstração da Aplicação
+
+<p align="center">
+  <img src="./image/dashboard-projeto.png" alt="Dashboard" width="800"/>
+</p>
+
+<p align="center">
+  <img src="./image/dashboard-projeto2.png" alt="Transações" width="800"/>
+</p>
+
+<p align="center">
+  <img src="./image/dashboard-projeto3.png" alt="Contas" width="800"/>
+</p>
+
+---
+
 ## Funcionalidades
 
 * **Sistema de Autenticação:** Registro e login de usuários para garantir a segurança e a personalização de dados.
