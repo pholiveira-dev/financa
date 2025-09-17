@@ -1,9 +1,9 @@
 const knex = require('../knex');
 
-const TABLE_NAME = 'user';
+const TABLE_NAME = 'users';
 
 class userModel {
-    static async findUsers(id) {
+    static async findUser(id) {
         return knex(TABLE_NAME).where({ id }).first();
     }
 
@@ -11,12 +11,12 @@ class userModel {
         return knex(TABLE_NAME).select('*');
     }
 
-    static async createUsers(userData) {
+    static async createUser(userData) {
         const [newUser] = await knex(TABLE_NAME).insert(userData).returning('*');
         return newUser;
     }
 
-    static async updateUsers(id, userData) {
+    static async updateUser(id, userData) {
     const [update] = await knex(TABLE_NAME)
     .where({ id })
     .update(userData)
@@ -24,14 +24,13 @@ class userModel {
     return update;
     }
 
-    static async deleteUsers(id) {
+    static async deleteUser(id) {
         const [deleted] = await knex(TABLE_NAME)
         .where({ id })
         .del()
         .returning('*');
         return deleted;
     }
-
 }
 
 module.exports = userModel;
