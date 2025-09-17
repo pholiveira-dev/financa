@@ -3,7 +3,7 @@ const knex = require('../knex');
 const TABLE_NAME = 'accounts';
 
 class accountsModel {
-    static async findByIdAccounts(id) {
+    static async findByIdAccount(id) {
         return knex(TABLE_NAME).where({ id }).first();
     }
 
@@ -11,22 +11,22 @@ class accountsModel {
         return knex(TABLE_NAME).select('*');
     }
 
-    static async createAccounts(accountsData) {
+    static async createAccount(accountData) {
         const [newAccount] = await knex(TABLE_NAME)
-        .insert(accountsData)
+        .insert(accountData)
         .returning('*');
         return newAccount;
     }
 
-    static async updateAccounts(id, accountsData) {
+    static async updateAccount(id, accountData) {
         const [update] = await knex(TABLE_NAME)
         .where({ id })
-        .update(accountsData)
+        .update(accountData)
         .returning('*');
         return update;
     }
 
-    static async deleteAccounts(id) {
+    static async deleteAccount(id) {
         const [deleted] = await knex(TABLE_NAME)
         .where({ id })
         .del()

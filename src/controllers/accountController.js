@@ -1,13 +1,13 @@
-const e = require('express');
-const transactionModel = require('../models/transactionModel');
+const accountModel = require('../models/accountsModel');
 
-async function getByIdAccounts(req, res) {
+// findByIdAccount(id)
+async function getAccount(req, res) {
 
     try {
         const { id } = req.params;
-        const transaction = await transactionModel.findIdTransactions(id);
+        const { user } = await accountModel.findIdTransactions(id);
 
-        res.render('dashboard', { transaction });
+        res.render('dashboard', { user });
         
     } catch (e) {
         console.error(e);
@@ -15,5 +15,52 @@ async function getByIdAccounts(req, res) {
     }
 }
 
+// findAllAccounts()
+async function getAllAccounts(req, res) {
+    try {
+        const { account } = await accountModel.findAllAccounts();
 
-module.exports = { getByIdAccounts };
+        res.json(account);
+
+    } catch (e) {
+        
+    }
+}
+
+// createAccounts(accountsData)
+async function postAccount(req, res) {
+    try {
+        const { accountsData } = req.body;
+
+        const { newAccount } = await accountModel.createAccount(accountsData);
+
+        res.json(newAccount);
+    } catch (e) {
+        
+    }
+}
+
+// updateAccount(id, accountData)
+async function putAccount(req, res) {
+    try {
+        const { id } = req.params;
+        const { accountData } = req.body;
+
+        const updated = await accountModel.updateAccount(id, accountData);
+
+        res.json(updated);
+
+    } catch (error) {
+        
+    }
+}
+
+// deleteAccount(id)
+async function deleteAccount(req, res) {
+    const { id } = req.params;
+
+    const deleted = await accountModel.deleteAccount(id);
+
+    res.json(deleted);
+}
+module.exports = { getAccount, getAllAccounts, postAccount, putAccount };

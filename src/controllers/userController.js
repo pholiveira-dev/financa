@@ -3,7 +3,7 @@ const userModel = require('../models/userModel');
 // createUsers(userData)
 async function postUser(req, res) {
     try {
-    const newUser = req.body;
+    const { newUser } = req.body;
 
     await userModel.createUser(newUser);
     
@@ -18,7 +18,7 @@ async function postUser(req, res) {
 // findAllUsers
 async function getAllUsers(req, res) {
     try {
-        const users = await userModel.findAllUsers();
+        const { users } = await userModel.findAllUsers();
         res.json( users );
 
     } catch (e) {
@@ -61,7 +61,7 @@ async function deleteUser(req, res) {
     try {
         const { id } = req.params;
 
-        const deleted = await userModel.deleteUser(id);
+        const { deleted } = await userModel.deleteUser(id);
 
         res.json(deleted);
 
