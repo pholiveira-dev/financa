@@ -5,7 +5,7 @@ async function getTransaction(req, res) {
     try {
         const { id } = req.params;
         
-        const findTransaction = await transactionModel.findAllTransactions(id);
+        const findTransaction = await transactionModel.findIdTransactions(id);
 
         res.json(findTransaction);
 
@@ -18,7 +18,7 @@ async function getTransaction(req, res) {
 // findAllTransactions()
 async function getAllTransactions(req, res) {
     try {
-        const { allTransictions } = await transactionModel.findAllTransactions();
+        const allTransictions = await transactionModel.findAllTransactions();
 
         res.json(allTransictions);
 
@@ -33,7 +33,7 @@ async function deleteTransaction(req, res) {
     try {
         const { id } = req.params;
 
-        const { deleted } = await transactionModel(id);
+        const deleted = await transactionModel.deletedTransaction(id);
 
         res.json(deleted);
 
@@ -47,9 +47,11 @@ async function deleteTransaction(req, res) {
 async function putTransaction(req, res) {
     try {
         const { id } = req.params;
-        const { dataTransaction } = req.body;
+        const { tipo, valor, descricao } = req.body;
+        
+        const dataTransaction  = { tipo, valor, descricao };
 
-        const { updated } = await transactionModel.updatedTransaction(id, dataTransaction);
+        const updated = await transactionModel.updatedTransaction(id, dataTransaction);
 
         res.json(updated);
 
@@ -62,8 +64,10 @@ async function putTransaction(req, res) {
 // createTransaction(dataTransactions)
 async function postTransaction(req, res) {
     try {
-        const { dataTransaction } = req.body
-        const { newTransaction } = await transactionModel.createTransaction(dataTransaction);
+        const { tipo, valor, descricao } = req.body;
+        const createTransaction = { tipo, valor, descricao };
+
+        const newTransaction = await transactionModel.createTransaction(createTransaction);
 
         res.json(newTransaction);
 

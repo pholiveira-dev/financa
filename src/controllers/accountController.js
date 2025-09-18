@@ -1,13 +1,14 @@
 const accountModel = require('../models/accountsModel');
+const { deleteTransaction } = require('./transactionController');
 
 // findByIdAccount(id)
 async function getAccount(req, res) {
 
     try {
         const { id } = req.params;
-        const { user } = await accountModel.findIdTransactions(id);
+        const account = await accountModel.findIdTransactions(id);
 
-        res.render('dashboard', { user });
+        res.json(account);
         
     } catch (e) {
         console.error(e);
@@ -18,9 +19,9 @@ async function getAccount(req, res) {
 // findAllAccounts()
 async function getAllAccounts(req, res) {
     try {
-        const { account } = await accountModel.findAllAccounts();
+        const allAccounts = await accountModel.findAllAccounts();
 
-        res.json(account);
+        res.json(allAccounts);
 
     } catch (e) {
         
@@ -30,11 +31,13 @@ async function getAllAccounts(req, res) {
 // createAccounts(accountsData)
 async function postAccount(req, res) {
     try {
-        const { accountsData } = req.body;
+        const { nome, tipo, limite, criado_em } = req.body;
 
-        const { newAccount } = await accountModel.createAccount(accountsData);
+        const newAccount = { nome, tipo, limite, criado_em };
 
-        res.json(newAccount);
+        const createdAccount = await accountModel.createAccount(newAccount);
+
+        res.json(createdAccount);
     } catch (e) {
         
     }
@@ -44,9 +47,10 @@ async function postAccount(req, res) {
 async function putAccount(req, res) {
     try {
         const { id } = req.params;
-        const { accountData } = req.body;
+        const { nome, tipo, limite, criado_em } = req.body;
+        const updatedAccount = { nome, tipo, limite, criado_em };
 
-        const updated = await accountModel.updateAccount(id, accountData);
+        const updated = await accountModel.updateAccount(id, updatedAccount);
 
         res.json(updated);
 
@@ -63,4 +67,4 @@ async function deleteAccount(req, res) {
 
     res.json(deleted);
 }
-module.exports = { getAccount, getAllAccounts, postAccount, putAccount };
+module.exports = { getAccount, getAllAccounts, postAccount, putAccount, deleteTransaction };

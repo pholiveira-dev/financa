@@ -4,7 +4,7 @@ const recurringExpensesModel = require('../models/recurringExpensesModel');
 async function getRecurringExpenses(req, res) {
     try {
         const { id } = req.params;
-        const { recurringExpenses } = await recurringExpensesModel.findByIdRecurringExpenses();
+        const recurringExpenses = await recurringExpensesModel.findByIdRecurringExpenses(id);
 
         res.json(recurringExpenses);
 
@@ -17,7 +17,7 @@ async function getRecurringExpenses(req, res) {
 // findAllRecurringExpenses()
 async function getAllRecurringExpenses(req, res) {
     try {
-        const { allRecurringExpenses } = await recurringExpensesModel.findAllRecurringExpenses();
+        const allRecurringExpenses = await recurringExpensesModel.findAllRecurringExpenses();
 
         res.json(allRecurringExpenses);
 
@@ -30,8 +30,10 @@ async function getAllRecurringExpenses(req, res) {
 // createRecurringExpenses(recurringExpensesData)
 async function postRecurringExpenses(req, res) {
     try {
-        const { recurringExpensesData } = req.body;
-        const { newRecurringExpenses } = await recurringExpensesModel.createRecurringExpenses(recurringExpensesData);
+        const { valor, descricao, dia_vencimento, ativo } = req.body;
+        const recurringExpensesData = { valor, descricao, dia_vencimento, ativo };
+
+        const newRecurringExpenses = await recurringExpensesModel.createRecurringExpenses(recurringExpensesData);
 
         res.json(newRecurringExpenses);
 
@@ -45,9 +47,9 @@ async function postRecurringExpenses(req, res) {
 async function putRecurringExpenses(req, res) {
     try {
         const { id } = req.params;
-        const { recurringExpensesData } = req.body;
+        const recurringExpensesData = req.body;
 
-        const { updated } = await recurringExpensesModel.updateRecurringExpenses(id, recurringExpensesData);
+        const updated = await recurringExpensesModel.updateRecurringExpenses(id, recurringExpensesData);
 
         res.json(updated);
 
@@ -62,7 +64,7 @@ async function deletedRecurringExpenses(req, res) {
     try {
         const { id } = req.params;
 
-        const { deleted } = await recurringExpensesModel.deleteRecurringExpenses(id);
+        const deleted = await recurringExpensesModel.deleteRecurringExpenses(id);
 
         res.json(deleted);
 
