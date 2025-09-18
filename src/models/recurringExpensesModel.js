@@ -12,7 +12,7 @@ class recurringExpensesModel {
         return knex(TABLE_NAME).select('*');
     }
 
-    static async createARecurringExpenses(recurringExpensesData) {
+    static async createRecurringExpenses(recurringExpensesData) {
         const [newRecurringExpenses] = await knex(TABLE_NAME)
         .insert(recurringExpensesData)
         .returning('*');

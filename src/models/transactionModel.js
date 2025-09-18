@@ -4,7 +4,7 @@ const TABLE_NAME = 'transactions';
 
 class transactionModel {
 
-    static async findIdTransactions(id) {
+    static async findIdTransaction(id) {
         return knex(TABLE_NAME).where({ id }).first;
     }
 
@@ -12,7 +12,7 @@ class transactionModel {
         return knex(TABLE_NAME).select('*');
     }
 
-    static async deletedTransactions(id) {
+    static async deletedTransaction(id) {
         const [deleted] = await knex(TABLE_NAME)
         .where({ id })
         .del()
@@ -20,7 +20,7 @@ class transactionModel {
         return deleted;
     }
 
-    static async updatedTransactions(id, dataTransactions) {
+    static async updatedTransaction(id, dataTransactions) {
         const [updated] = await knex(TABLE_NAME)
         .where({ id })
         .update(dataTransactions)
@@ -28,7 +28,7 @@ class transactionModel {
         return updated;
     }
 
-    static async createTransactions(id, dataTransactions) {
+    static async createTransaction(dataTransactions) {
         const [newTransactions] = await knex(TABLE_NAME)
         .insert(dataTransactions)
         .returning('*');
