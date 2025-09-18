@@ -13,9 +13,14 @@ app.set('views', path.join(__dirname, 'src', 'views'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+const mainRoutes = require('./src/routes/mainRoutes');
+app.use('/', mainRoutes);
 
-const routes = require('./routes');
-app.use(routes);
+const authRoutes = require('./src/routes/authRoutes');
+app.use('/', authRoutes);
+
+const transactionRoutes = require('./src/routes/transactionRoutes');
+app.use('/transaction', transactionRoutes);
 
 const PORT = 3000;
 
