@@ -4,4 +4,14 @@
     background-color: #4f46e5;
     color: #fff;
     font-weight: 600;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.sidebar-item.active-page:hover {
+    background-color: #4338ca;
+}
+
+.modal-content.show {
+    transform: scale(1);
+    opacity: 1;
 }
