@@ -17,10 +17,19 @@ const mainRoutes = require('./src/routes/mainRoutes');
 app.use('/', mainRoutes);
 
 const authRoutes = require('./src/routes/authRoutes');
-app.use('/', authRoutes);
+app.use('/api/users', authRoutes);
+
+const accountRoutes = require('./src/routes/accountRoutes');
+app.use('/api/accounts', accountRoutes);
 
 const transactionRoutes = require('./src/routes/transactionRoutes');
-app.use('/transaction', transactionRoutes);
+app.use('/api/transactions', transactionRoutes);
+
+const categoriesRoutes = require('./src/routes/categoriesRoutes');
+app.use('/api/categories', categoriesRoutes);
+
+const recurringExpensesRoutes = require('./src/routes/recurringExpensesRoutes');
+app.use('/api/recurring-expenses', recurringExpensesRoutes);
 
 const PORT = 3000;
 

@@ -1,11 +1,11 @@
 const knex = require('../knex');
 
-const TABLE_NAME = 'recurring_expenses';
+const TABLE_NAME = 'recurringExpenses';
 
 class recurringExpensesModel {
 
     static async findByIdRecurringExpenses(id) {
-        return knex(TABLE_NAME).where({ id }).first();
+        return knex(TABLE_NAME).where({ recurring_id: id }).first();
     }
 
     static async findAllRecurringExpenses() {
@@ -21,7 +21,7 @@ class recurringExpensesModel {
 
     static async updateRecurringExpenses(id, recurringExpensesData) {
         const [update] = await knex(TABLE_NAME)
-        .where({ id })
+        .where({ recurring_id: id })
         .update(recurringExpensesData)
         .returning('*');
         return update;
@@ -29,7 +29,7 @@ class recurringExpensesModel {
 
     static async deleteRecurringExpenses(id) {
         const [deleted] = await knex(TABLE_NAME)
-        .where({ id })
+        .where({ recurring_id:id })
         .del()
         .returning('*');
         return deleted;

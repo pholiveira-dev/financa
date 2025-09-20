@@ -30,8 +30,9 @@ async function getAllRecurringExpenses(req, res) {
 // createRecurringExpenses(recurringExpensesData)
 async function postRecurringExpenses(req, res) {
     try {
-        const { valor, descricao, dia_vencimento, ativo } = req.body;
-        const recurringExpensesData = { valor, descricao, dia_vencimento, ativo };
+        const { valor, descricao, dia_vencimento, ativo, category_id, user_id, account_id } = req.body;
+        
+        const recurringExpensesData = { valor, descricao, dia_vencimento, ativo, category_id, user_id, account_id };
 
         const newRecurringExpenses = await recurringExpensesModel.createRecurringExpenses(recurringExpensesData);
 
@@ -47,7 +48,9 @@ async function postRecurringExpenses(req, res) {
 async function putRecurringExpenses(req, res) {
     try {
         const { id } = req.params;
-        const recurringExpensesData = req.body;
+        const { category_id, user_id, account_id, valor, descricao, dia_vencimento, ativo } = req.body;
+
+        const recurringExpensesData = { category_id, user_id, account_id, valor, descricao, dia_vencimento, ativo };
 
         const updated = await recurringExpensesModel.updateRecurringExpenses(id, recurringExpensesData);
 
@@ -60,7 +63,7 @@ async function putRecurringExpenses(req, res) {
 }
 
 // deleteRecurringExpenses(id)
-async function deletedRecurringExpenses(req, res) {
+async function deleteRecurringExpenses(req, res) {
     try {
         const { id } = req.params;
 
@@ -68,7 +71,7 @@ async function deletedRecurringExpenses(req, res) {
 
         res.json(deleted);
 
-    } catch (error) {
+    } catch (e) {
         console.error(e);
         res.status(404).send('') // Falta tratar o erro                
     }
@@ -79,5 +82,5 @@ module.exports = {
     getAllRecurringExpenses,
     postRecurringExpenses,
     putRecurringExpenses,
-    deletedRecurringExpenses
+    deleteRecurringExpenses
 }

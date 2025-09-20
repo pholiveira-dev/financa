@@ -4,7 +4,7 @@ const TABLE_NAME = 'accounts';
 
 class accountsModel {
     static async findByIdAccount(id) {
-        return knex(TABLE_NAME).where({ id }).first();
+        return knex(TABLE_NAME).where({ account_id: id }).first();
     }
 
     static async findAllAccounts() {
@@ -20,7 +20,7 @@ class accountsModel {
 
     static async updateAccount(id, accountData) {
         const [update] = await knex(TABLE_NAME)
-        .where({ id })
+        .where({ account_id: id })
         .update(accountData)
         .returning('*');
         return update;
@@ -28,7 +28,7 @@ class accountsModel {
 
     static async deleteAccount(id) {
         const [deleted] = await knex(TABLE_NAME)
-        .where({ id })
+        .where({ account_id: id })
         .del()
         .returning('*');
         return deleted;

@@ -1,160 +1,169 @@
-// public/js/main.js
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+    const userId = window.USER_ID;
 
-    // Lógica para alternar entre as páginas e modais
+    // Elementos da página
     const sidebarItems = document.querySelectorAll('.sidebar-item');
-    const pages = document.querySelectorAll('.page-content');
+    const pageContents = document.querySelectorAll('.page-content');
     const pageTitle = document.getElementById('page-title');
 
+    // Modais e Botões de Abertura
+    const addTransactionBtn = document.getElementById('addTransactionBtn');
+    const transactionModal = document.getElementById('transaction-modal');
+    const closeTransactionModalBtn = document.getElementById('closeTransactionModal');
+    const transactionForm = document.getElementById('transaction-form');
+
+    const addRecurringBtn = document.getElementById('addRecurringBtn');
+    const recurringModal = document.getElementById('recurring-modal');
+    const closeRecurringModalBtn = document.getElementById('closeRecurringModal');
+    const recurringForm = document.getElementById('recurring-form');
+
+    // Funções de controle da UI
+    const showPage = (pageId) => {
+        pageContents.forEach(page => page.classList.add('hidden'));
+        document.getElementById(`${pageId}-page`).classList.remove('hidden');
+        pageTitle.textContent = sidebarItems.find(item => item.dataset.page === pageId).textContent.trim();
+        sidebarItems.forEach(item => item.classList.remove('active-page', 'bg-indigo-600', 'text-white'));
+        document.querySelector(`[data-page="${pageId}"]`).classList.add('active-page', 'bg-indigo-600', 'text-white');
+    };
+    
+    const toggleModal = (modal, show) => {
+        modal.classList.toggle('hidden', !show);
+    };
+
+    // Event Listeners para a navegação
     sidebarItems.forEach(item => {
         item.addEventListener('click', (e) => {
             e.preventDefault();
-            const targetPageId = e.currentTarget.getAttribute('data-page');
-            pages.forEach(page => page.classList.remove('active-page'));
-            document.getElementById(targetPageId + '-page').classList.add('active-page');
-            pageTitle.textContent = e.currentTarget.textContent.trim();
+            const pageId = e.currentTarget.dataset.page;
+            showPage(pageId);
         });
     });
 
-    // Lógica do Modal
-    const addTransactionBtn = document.getElementById('addTransactionBtn');
-    const transactionModal = document.getElementById('transaction-modal');
-    const closeModalBtn = document.getElementById('closeModalBtn');
-    const cancelModalBtn = document.getElementById('cancelModalBtn');
-
-    addTransactionBtn.addEventListener('click', () => {
-        transactionModal.classList.remove('hidden');
-        transactionModal.classList.add('flex');
-    });
-
-    closeModalBtn.addEventListener('click', () => {
-        transactionModal.classList.add('hidden');
-        transactionModal.classList.remove('flex');
-    });
-
-    cancelModalBtn.addEventListener('click', () => {
-        transactionModal.classList.add('hidden');
-        transactionModal.classList.remove('flex');
-    });
-
+    // Event Listeners para os modais
+    addTransactionBtn.addEventListener('click', () => toggleModal(transactionModal, true));
+    closeTransactionModalBtn.addEventListener('click', () => toggleModal(transactionModal, false));
+    addRecurringBtn.addEventListener('click', () => toggleModal(recurringModal, true));
+    closeRecurringModalBtn.addEventListener('click', () => toggleModal(recurringModal, false));
     window.addEventListener('click', (e) => {
-        if (e.target === transactionModal) {
-            transactionModal.classList.add('hidden');
-            transactionModal.classList.remove('flex');
-        }
+        if (e.target === transactionModal) toggleModal(transactionModal, false);
+        if (e.target === recurringModal) toggleModal(recurringModal, false);
     });
 
-    // Lógica para enviar o formulário de transação
-    const transactionForm = document.getElementById('transaction-form');
+    // Funções de requisição de dados
+    const fetchData = async (endpoint, options = {}) => {
+        try {
+            const response = await fetch(endpoint, options);
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.message || `Erro na requisição: ${response.status}`);
+            }
+            return await response.json();
+        } catch (error) {
+            console.error('Erro de API:', error.message);
+            alert(`Erro na comunicação com o servidor: ${error.message}`);
+            return null;
+        }
+    };
+    
+    // Funções de preenchimento de dados
+    const renderAccounts = async () => {
+        const accounts = await fetchData(`/api/accounts?user_id=${userId}`);
+        const accountsSelects = [document.getElementById('transaction-account'), document.getElementById('recurring-account')];
+        accountsSelects.forEach(select => select.innerHTML = '');
+        if (accounts && accounts.length > 0) {
+            accounts.forEach(acc => {
+                const option = `<option value="${acc.account_id}">${acc.nome} (${acc.tipo})</option>`;
+                accountsSelects.forEach(select => select.insertAdjacentHTML('beforeend', option));
+            });
+        } else {
+            const option = '<option disabled selected>Nenhuma conta disponível</option>';
+            accountsSelects.forEach(select => select.insertAdjacentHTML('beforeend', option));
+        }
+    };
 
+    const renderCategories = async () => {
+        const categories = await fetchData('/api/categories');
+        const categoriesSelects = [document.getElementById('transaction-category'), document.getElementById('recurring-category')];
+        categoriesSelects.forEach(select => select.innerHTML = '');
+        if (categories && categories.length > 0) {
+            categories.forEach(cat => {
+                const option = `<option value="${cat.categories_id}">${cat.nome}</option>`;
+                categoriesSelects.forEach(select => select.insertAdjacentHTML('beforeend', option));
+            });
+        } else {
+            const option = '<option disabled selected>Nenhuma categoria disponível</option>';
+            categoriesSelects.forEach(select => select.insertAdjacentHTML('beforeend', option));
+        }
+    };
+    
+    const renderTransactions = async () => {
+        const transactions = await fetchData(`/api/transactions?user_id=${userId}`);
+        const tableBody = document.getElementById('transactions-table-body');
+        tableBody.innerHTML = '';
+        if (transactions && transactions.length > 0) {
+            transactions.forEach(tx => {
+                const row = `<tr>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${tx.descricao}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${tx.valor}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${tx.tipo}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${tx.account_id}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${tx.category_id}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"></td>
+                </tr>`;
+                tableBody.insertAdjacentHTML('beforeend', row);
+            });
+        } else {
+            tableBody.innerHTML = '<tr><td colspan="6" class="px-6 py-4 text-center text-gray-500">Nenhuma transação encontrada.</td></tr>';
+        }
+    };
+
+    // Submissão dos Formulários
     transactionForm.addEventListener('submit', async (e) => {
         e.preventDefault();
-
-        // Coleta os dados do formulário
-        const tipo = document.querySelector('input[name="transaction-type"]:checked').value;
-        const valor = parseFloat(document.getElementById('transaction-value').value);
-        const descricao = document.getElementById('transaction-description').value;
-
-        // **Ajuste para enviar os IDs obrigatórios**
-        const transactionData = {
-            user_id: 1,      // Exemplo: use um ID de usuário que exista no seu banco
-            category_id: 1,  // Exemplo: use um ID de categoria que exista no seu banco
-            account_id: 1,   // Exemplo: use um ID de conta que exista no seu banco
-            tipo,
-            valor,
-            descricao
+        const data = {
+            user_id: userId,
+            descricao: document.getElementById('transaction-description').value,
+            valor: parseFloat(document.getElementById('transaction-value').value),
+            tipo: document.getElementById('transaction-type').value,
+            account_id: parseInt(document.getElementById('transaction-account').value),
+            category_id: parseInt(document.getElementById('transaction-category').value)
         };
-
-        try {
-            // Envia os dados para o back-end usando a Fetch API
-            const response = await fetch('/transactions', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(transactionData),
-            });
-
-            // Verifica a resposta do servidor
-            if (response.ok) {
-                const result = await response.json();
-                console.log('Transação criada com sucesso:', result);
-                alert('Transação criada com sucesso!');
-                transactionForm.reset(); // Limpa o formulário
-                transactionModal.classList.add('hidden'); // Fecha o modal
-            } else {
-                const errorData = await response.json();
-                console.error('Erro ao criar transação:', errorData);
-                alert('Erro ao criar transação: ' + (errorData.error || 'Ocorreu um erro desconhecido.'));
-            }
-        } catch (error) {
-            console.error('Erro na requisição:', error);
-            alert('Não foi possível se conectar ao servidor.');
+        const result = await fetchData('/api/transactions', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+        if (result) {
+            toggleModal(transactionModal, false);
+            transactionForm.reset();
+            renderTransactions(); // Recarrega a lista
         }
     });
 
-    // Dados de exemplo para os gráficos
-    const categoryData = {
-        labels: ['Moradia', 'Alimentação', 'Transporte', 'Lazer', 'Outros'],
-        datasets: [{
-            label: 'Gastos por Categoria',
-            data: [30, 20, 15, 10, 25],
-            backgroundColor: [
-                '#818cf8', '#60a5fa', '#2dd4bf', '#f87171', '#fbbf24'
-            ],
-            hoverOffset: 4
-        }]
-    };
-
-    const incomeExpenseData = {
-        labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun'],
-        datasets: [{
-            label: 'Entradas',
-            data: [1200, 1500, 1300, 1700, 1600, 2000],
-            borderColor: '#22c55e',
-            backgroundColor: '#22c55e',
-            tension: 0.4
-        }, {
-            label: 'Saídas',
-            data: [800, 1000, 950, 1100, 1200, 1400],
-            borderColor: '#ef4444',
-            backgroundColor: '#ef4444',
-            tension: 0.4
-        }]
-    };
-
-    // Configuração e renderização dos gráficos
-    const categoryCtx = document.getElementById('categoryChart').getContext('2d');
-    new Chart(categoryCtx, {
-        type: 'doughnut',
-        data: categoryData,
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: { legend: { position: 'bottom' }, title: { display: false } }
-        },
+    recurringForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const data = {
+            user_id: userId,
+            descricao: document.getElementById('recurring-description').value,
+            valor: parseFloat(document.getElementById('recurring-value').value),
+            dia_vencimento: parseInt(document.getElementById('recurring-due-day').value),
+            account_id: parseInt(document.getElementById('recurring-account').value),
+            category_id: parseInt(document.getElementById('recurring-category').value)
+        };
+        const result = await fetchData('/api/recurring-expenses', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+        if (result) {
+            toggleModal(recurringModal, false);
+            recurringForm.reset();
+            // Lógica para recarregar despesas recorrentes aqui
+        }
     });
 
-    const incomeExpenseCtx = document.getElementById('incomeExpenseChart').getContext('2d');
-    new Chart(incomeExpenseCtx, {
-        type: 'bar',
-        data: {
-            labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun'],
-            datasets: [{
-                label: 'Entradas',
-                data: [1200, 1500, 1300, 1700, 1600, 2000],
-                backgroundColor: '#22c55e'
-            }, {
-                label: 'Saídas',
-                data: [-800, -1000, -950, -1100, -1200, -1400],
-                backgroundColor: '#ef4444'
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: { legend: { position: 'bottom' }, title: { display: false } },
-            scales: { x: { stacked: true }, y: { stacked: true } }
-        },
-    });
+    // Inicialização
+    await renderAccounts();
+    await renderCategories();
+    await renderTransactions();
 });

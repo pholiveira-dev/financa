@@ -16,17 +16,20 @@ async function getTransaction(req, res) {
 }
 
 // findAllTransactions()
+// src/controllers/transactionController.js
+// ...
 async function getAllTransactions(req, res) {
     try {
-        const allTransictions = await transactionModel.findAllTransactions();
-
-        res.json(allTransictions);
+       
+        const allTransactions = await transactionModel.findAllTransactions(); // Altere esta linha para chamar um novo método no Model
+        res.status(200).json(allTransactions);
 
     } catch (e) {
         console.error(e);
-        res.status(404).send('') // Falta tratar erro
+        res.status(500).json({ message: "Erro interno do servidor ao listar transações." });
     }
 }
+// ...
 
 // deletedTransaction(id)
 async function deleteTransaction(req, res) {
@@ -47,9 +50,9 @@ async function deleteTransaction(req, res) {
 async function putTransaction(req, res) {
     try {
         const { id } = req.params;
-        const { user_id, category_id, account_id, tipo, valor, descricao } = req.body;
+        const { tipo, valor, descrição, user_id, category_id, account_id } = req.body;
         
-        const dataTransaction  = { user_id, category_id, account_id, tipo, valor, descricao };
+        const dataTransaction  = { tipo, valor, descrição, user_id, category_id, account_id };
 
         const updated = await transactionModel.updatedTransaction(id, dataTransaction);
 
@@ -64,8 +67,9 @@ async function putTransaction(req, res) {
 // createTransaction(dataTransactions)
 async function postTransaction(req, res) {
     try {
-        const { user_id, category_id, account_id, tipo, valor, descricao } = req.body;
-        const createTransaction = { user_id, category_id, account_id, tipo, valor, descricao };
+        const { tipo, valor, descrição, user_id, category_id, account_id } = req.body;
+        
+        const createTransaction = { tipo, valor, descrição, user_id, category_id, account_id };
 
         const newTransaction = await transactionModel.createTransaction(createTransaction);
 
