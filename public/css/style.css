@@ -1,0 +1,7 @@
+/* src/css/style.css */
+
+.sidebar-item.active-page {
+    background-color: #4f46e5;
+    color: #fff;
+    font-weight: 600;
+}

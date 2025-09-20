@@ -16,12 +16,11 @@ async function getTransaction(req, res) {
 }
 
 // findAllTransactions()
-// src/controllers/transactionController.js
-// ...
 async function getAllTransactions(req, res) {
     try {
-       
-        const allTransactions = await transactionModel.findAllTransactions(); // Altere esta linha para chamar um novo método no Model
+        
+        const { user_id } = req.query;
+        const allTransactions = await transactionModel.findAllWithNames(user_id); 
         res.status(200).json(allTransactions);
 
     } catch (e) {
@@ -29,7 +28,7 @@ async function getAllTransactions(req, res) {
         res.status(500).json({ message: "Erro interno do servidor ao listar transações." });
     }
 }
-// ...
+
 
 // deletedTransaction(id)
 async function deleteTransaction(req, res) {
@@ -50,9 +49,9 @@ async function deleteTransaction(req, res) {
 async function putTransaction(req, res) {
     try {
         const { id } = req.params;
-        const { tipo, valor, descrição, user_id, category_id, account_id } = req.body;
+        const { tipo, valor, descricao, user_id, category_id, account_id } = req.body;
         
-        const dataTransaction  = { tipo, valor, descrição, user_id, category_id, account_id };
+        const dataTransaction  = { tipo, valor, descricao, user_id, category_id, account_id };
 
         const updated = await transactionModel.updatedTransaction(id, dataTransaction);
 
@@ -67,9 +66,9 @@ async function putTransaction(req, res) {
 // createTransaction(dataTransactions)
 async function postTransaction(req, res) {
     try {
-        const { tipo, valor, descrição, user_id, category_id, account_id } = req.body;
+        const { tipo, valor, descricao, user_id, category_id, account_id } = req.body;
         
-        const createTransaction = { tipo, valor, descrição, user_id, category_id, account_id };
+        const createTransaction = { tipo, valor, descricao, user_id, category_id, account_id };
 
         const newTransaction = await transactionModel.createTransaction(createTransaction);
 
