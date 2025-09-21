@@ -28,6 +28,29 @@ async function getSumFullEntry(req, res) {
     }
 }
 
+// Pegar o total de saídas do mês do usuário
+async function getSumMonthlyOutput(req, res) {
+    try {
+        const { user_id } = req.params;
+        const sumOutput = await transactionModel.findTotalOutput(user_id);
+        res.json(sumOutput);
+    } catch (error) {
+        
+    }
+}
+
+async function getBalance(req, res) {
+    try {
+        const { user_id } = req.params;
+
+        const balance = await transactionModel.findBalance(user_id);
+        res.json(balance);
+
+    } catch (error) {
+        
+    }
+}
+
 // findAllTransactions()
 async function getAllTransactions(req, res) {
     try {
@@ -99,5 +122,7 @@ module.exports = {
     deleteTransaction,
     putTransaction,
     postTransaction,
-    getSumFullEntry
+    getSumFullEntry,
+    getBalance,
+    getSumMonthlyOutput,
 };

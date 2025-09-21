@@ -1,9 +1,9 @@
 document.addEventListener('DOMContentLoaded', async () => {
     // Pega o ID do usuário do EJS e garante que seja um número.
-    const userId = parseInt(window.USER_ID, 10);
+    const user_id = parseInt(window.USER_ID, 10);
 
     // Verificação de ID de usuário
-    if (isNaN(userId)) {
+    if (isNaN(user_id)) {
         console.error('ID do usuário não definido. Redirecionando para login.');
         // Opcional: redirecionar para a página de login
         // window.location.href = '/login'; 
@@ -156,7 +156,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     
     // Funções de preenchimento de dados
     const renderAccounts = async () => {
-        const accounts = await fetchData(`/api/accounts?user_id=${userId}`);
+        const accounts = await fetchData(`/api/accounts?user_id=${user_id}`);
         const accountsSelects = [document.getElementById('transaction-account'), document.getElementById('recurring-account')];
         accountsSelects.forEach(select => {
             if (select) select.innerHTML = '';
@@ -198,7 +198,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     };
     
     const renderTransactions = async () => {
-        const transactions = await fetchData(`/api/transactions?user_id=${userId}`);
+        const transactions = await fetchData(`/api/transactions?user_id=${user_id}`);
         const tableBody = document.getElementById('transactions-table-body');
         if (!tableBody) return;
         
@@ -245,7 +245,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     const row = e.target.closest('tr');
                     const transactionId = row.dataset.transactionId;
                     
-                    const transactionToEdit = await fetchData(`/api/transactions/${transactionId}?user_id=${userId}`);
+                    const transactionToEdit = await fetchData(`/api/transactions/${transactionId}?user_id=${user_id}`);
                     
                     if (transactionToEdit) {
                         transactionForm.dataset.editId = transactionId;
@@ -273,7 +273,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     };
 
     const renderAccountsList = async () => {
-        const accounts = await fetchData(`/api/accounts?user_id=${userId}`);
+        const accounts = await fetchData(`/api/accounts?user_id=${user_id}`);
         const accountListDiv = document.getElementById('accounts-list');
         if (!accountListDiv) return;
 
@@ -313,7 +313,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 button.addEventListener('click', async (e) => {
                     const card = e.target.closest('[data-account-id]');
                     const accountId = card.dataset.accountId;
-                    const accountToEdit = await fetchData(`/api/accounts/${accountId}?user_id=${userId}`);
+                    const accountToEdit = await fetchData(`/api/accounts/${accountId}?user_id=${user_id}`);
 
                     if (accountToEdit) {
                         accountForm.dataset.editId = accountId;
@@ -333,7 +333,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     };
     
     const renderRecurringExpenses = async () => {
-        const recurringExpenses = await fetchData(`/api/recurring-expenses?user_id=${userId}`);
+        const recurringExpenses = await fetchData(`/api/recurring-expenses?user_id=${user_id}`);
         const tableBody = document.getElementById('recurring-table-body');
         if (!tableBody) return;
 
@@ -378,7 +378,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     const row = e.target.closest('tr');
                     const recurringId = row.dataset.recurringExpenseId;
                     
-                    const recurringToEdit = await fetchData(`/api/recurring-expenses/${recurringId}?user_id=${userId}`);
+                    const recurringToEdit = await fetchData(`/api/recurring-expenses/${recurringId}?user_id=${user_id}`);
                     
                     if (recurringToEdit) {
                         recurringForm.dataset.editId = recurringId;
@@ -462,11 +462,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 const renderDashboardSummary = async () => {
         // Passo 1: Obter o valor total de entradas através da nova API
-        const totalEntradasData = await fetchData(`/api/transactions/total-entradas/${userId}`);
+        const totalEntradasData = await fetchData(`/api/transactions/total-entradas/${user_id}`);
         const totalIncomeValue = totalEntradasData ? parseFloat(totalEntradasData.total_entradas) : 0;
         
         // Passo 2: Buscar todas as transações para calcular saldo e saídas
-        const transactions = await fetchData(`/api/transactions?user_id=${userId}`);
+        const transactions = await fetchData(`/api/transactions?user_id=${user_id}`);
         
         if (transactions) {
             let totalBalance = 0;
@@ -510,7 +510,7 @@ const renderDashboardSummary = async () => {
     };
     
     const renderRecentTransactions = async () => {
-        const transactions = await fetchData(`/api/transactions?user_id=${userId}`);
+        const transactions = await fetchData(`/api/transactions?user_id=${user_id}`);
         const tableBody = document.getElementById('recent-transactions-table-body');
         const noTransactionsMessage = document.getElementById('no-recent-transactions');
         
@@ -551,7 +551,7 @@ const renderDashboardSummary = async () => {
     };
     
     const renderUpcomingRecurringExpenses = async () => {
-        const recurringExpenses = await fetchData(`/api/recurring-expenses?user_id=${userId}`);
+        const recurringExpenses = await fetchData(`/api/recurring-expenses?user_id=${user_id}`);
         const tableBody = document.getElementById('upcoming-recurring-table-body');
         const noRecurringMessage = document.getElementById('no-upcoming-recurring');
         
@@ -613,7 +613,7 @@ const renderDashboardSummary = async () => {
                     body: JSON.stringify(data)
                 });
             } else {
-                data.user_id = userId;
+                data.user_id = user_id;
                 result = await fetchData('/api/transactions', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -653,7 +653,7 @@ const renderDashboardSummary = async () => {
                 nome: document.getElementById('account-name').value,
                 tipo: accountType,
                 limite: accountLimit,
-                user_id: userId
+                user_id: user_id
             };
             
             let result;
@@ -703,7 +703,7 @@ const renderDashboardSummary = async () => {
                     body: JSON.stringify(data)
                 });
             } else {
-                data.user_id = userId;
+                data.user_id = user_id;
                 result = await fetchData('/api/recurring-expenses', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
