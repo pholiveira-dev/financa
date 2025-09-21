@@ -1,5 +1,14 @@
 document.addEventListener('DOMContentLoaded', async () => {
-    const userId = window.USER_ID;
+    // Pega o ID do usuário do EJS e garante que seja um número.
+    const userId = parseInt(window.USER_ID, 10);
+
+    // Verificação de ID de usuário
+    if (isNaN(userId)) {
+        console.error('ID do usuário não definido. Redirecionando para login.');
+        // Opcional: redirecionar para a página de login
+        // window.location.href = '/login'; 
+        return; 
+    }
 
     // Elementos da página
     const sidebarItems = document.querySelectorAll('.sidebar-item');
@@ -44,15 +53,27 @@ document.addEventListener('DOMContentLoaded', async () => {
             pageTitle.textContent = selectedItem.textContent.trim();
         }
         
-        sidebarItems.forEach(item => item.classList.remove('active-page', 'bg-indigo-600', 'text-white'));
+        sidebarItems.forEach(item => item.classList.remove('active-page'));
         if (selectedItem) {
-            selectedItem.classList.add('active-page', 'bg-indigo-600', 'text-white');
+            selectedItem.classList.add('active-page');
         }
     };
     
     const toggleModal = (modal, show) => {
         if (modal) {
-            modal.classList.toggle('hidden', !show);
+            if (show) {
+                modal.classList.remove('hidden');
+                setTimeout(() => {
+                    const modalContent = modal.querySelector('.modal-content');
+                    if (modalContent) modalContent.classList.add('show');
+                }, 10);
+            } else {
+                const modalContent = modal.querySelector('.modal-content');
+                if (modalContent) modalContent.classList.remove('show');
+                setTimeout(() => {
+                    modal.classList.add('hidden');
+                }, 300); // tempo da transição no css
+            }
         }
     };
 
@@ -185,7 +206,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     
         if (transactions && transactions.length > 0) {
             transactions.forEach(tx => {
-                const row = `<tr data-transaction-id="${tx.transaction_id}">
+                const row = `<tr data-transaction-id="${tx.transaction_id}" class="table-row-hover">
                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${tx.descricao || tx.descrição || 'N/A'}</td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">R$ ${parseFloat(tx.valor).toFixed(2).replace('.', ',')}</td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
@@ -259,7 +280,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         accountListDiv.innerHTML = '';
         if (accounts && accounts.length > 0) {
             accounts.forEach(acc => {
-                const card = `<div class="bg-white p-6 rounded-xl shadow-md border-t-4 border-gray-500" data-account-id="${acc.account_id}">
+                const card = `<div class="bg-white p-6 rounded-xl shadow-md border-t-4 border-gray-500 transform transition-all duration-300 hover:scale-105" data-account-id="${acc.account_id}">
                     <div class="flex justify-between items-center mb-2">
                         <h4 class="text-xl font-bold text-gray-800">${acc.nome}</h4>
                         <div class="text-right text-sm font-medium">
@@ -320,7 +341,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         
         if (recurringExpenses && recurringExpenses.length > 0) {
             recurringExpenses.forEach(exp => {
-                const row = `<tr data-recurring-expense-id="${exp.recurring_id}">
+                const row = `<tr data-recurring-expense-id="${exp.recurring_id}" class="table-row-hover">
                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${exp.descricao || 'N/A'}</td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">R$ ${parseFloat(exp.valor).toFixed(2).replace('.', ',')}</td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${exp.category_name || 'N/A'}</td>
@@ -391,8 +412,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     
         if (categories && categories.length > 0) {
             categories.forEach(cat => {
-                const card = `<div class="bg-gray-50 p-4 rounded-lg flex justify-between items-center" data-category-id="${cat.categories_id}">
-                    <h4 class="text-lg font-semibold text-gray-800">${cat.nome}</h4>
+                const card = `<div class="bg-gray-50 p-4 rounded-lg flex justify-between items-center transform transition-all duration-300 hover:scale-[1.02]" data-category-id="${cat.categories_id}">
+                    <div>
+                        <h4 class="text-lg font-semibold text-gray-800">${cat.nome}</h4>
+                        <p class="text-sm text-gray-500">${cat.tipo_gasto}</p>
+                    </div>
                     <div class="text-right text-sm font-medium">
                         <button class="text-indigo-600 hover:text-indigo-900 mr-2 edit-category-btn">Editar</button>
                         <button class="text-red-600 hover:text-red-900 delete-category-btn">Excluir</button>
@@ -409,6 +433,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     if (categoryToEdit) {
                         categoryForm.dataset.editId = categoryId;
                         document.getElementById('category-name').value = categoryToEdit.nome;
+                        document.getElementById('category-type').value = categoryToEdit.tipo_gasto;
                         categoryModalTitle.textContent = 'Editar Categoria';
                         categorySubmitBtn.textContent = 'Atualizar';
                         toggleModal(categoryModal, true);
@@ -435,12 +460,16 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     };
 
-    const renderDashboardSummary = async () => {
+const renderDashboardSummary = async () => {
+        // Passo 1: Obter o valor total de entradas através da nova API
+        const totalEntradasData = await fetchData(`/api/transactions/total-entradas/${userId}`);
+        const totalIncomeValue = totalEntradasData ? parseFloat(totalEntradasData.total_entradas) : 0;
+        
+        // Passo 2: Buscar todas as transações para calcular saldo e saídas
         const transactions = await fetchData(`/api/transactions?user_id=${userId}`);
         
         if (transactions) {
             let totalBalance = 0;
-            let totalIncomeMonth = 0;
             let totalExpensesMonth = 0;
             
             const now = new Date();
@@ -458,20 +487,21 @@ document.addEventListener('DOMContentLoaded', async () => {
                 if (tx.data) {
                     const txDate = new Date(tx.data);
                     if (txDate >= startOfMonth) {
-                        if (tx.tipo === 'Entrada') {
-                            totalIncomeMonth += value;
-                        } else if (tx.tipo === 'Saída') {
+                        // A soma de entradas por mês não será mais feita aqui
+                        // pois a nova API já retorna o valor.
+                        if (tx.tipo === 'Saída') {
                             totalExpensesMonth += value;
                         }
                     }
                 }
             });
             
+            // Passo 3: Atualizar os elementos do DOM
             if (document.getElementById('total-balance')) {
                 document.getElementById('total-balance').textContent = `R$ ${totalBalance.toFixed(2).replace('.', ',')}`;
             }
             if (document.getElementById('total-income')) {
-                document.getElementById('total-income').textContent = `R$ ${totalIncomeMonth.toFixed(2).replace('.', ',')}`;
+                document.getElementById('total-income').textContent = `R$ ${totalIncomeValue.toFixed(2).replace('.', ',')}`;
             }
             if (document.getElementById('total-expenses')) {
                 document.getElementById('total-expenses').textContent = `R$ ${totalExpensesMonth.toFixed(2).replace('.', ',')}`;
@@ -500,7 +530,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     const description = tx.descricao || tx.descrição || 'N/A';
                     const accountName = tx.account_name || tx.account || 'N/A';
                     
-                    const row = `<tr>
+                    const row = `<tr class="table-row-hover">
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${description}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">R$ ${parseFloat(tx.valor).toFixed(2).replace('.', ',')}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
@@ -542,7 +572,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     
             if (upcoming.length > 0) {
                 upcoming.forEach(exp => {
-                    const row = `<tr>
+                    const row = `<tr class="table-row-hover">
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${exp.descricao || 'N/A'}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">R$ ${parseFloat(exp.valor).toFixed(2).replace('.', ',')}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${exp.dia_vencimento ? new Date(exp.dia_vencimento).toLocaleDateString('pt-BR') : 'N/A'}</td>
@@ -607,17 +637,62 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     }
 
+    if (accountForm) {
+        accountForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const isEdit = accountForm.dataset.editId;
+            const accountType = document.getElementById('account-type').value;
+            
+            let accountLimit = null;
+            if (accountType === 'Crédito') {
+                const limitValue = document.getElementById('account-limit').value;
+                accountLimit = limitValue ? parseFloat(limitValue) : null;
+            }
+            
+            const data = {
+                nome: document.getElementById('account-name').value,
+                tipo: accountType,
+                limite: accountLimit,
+                user_id: userId
+            };
+            
+            let result;
+            if (isEdit) {
+                result = await fetchData(`/api/accounts/${isEdit}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+            } else {
+                result = await fetchData('/api/accounts', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+            }
+            
+            if (result) {
+                toggleModal(accountModal, false);
+                accountForm.reset();
+                delete accountForm.dataset.editId;
+                
+                renderAccountsList();
+                renderAccounts();
+            }
+        });
+    }
+
     if (recurringForm) {
         recurringForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             const isEdit = recurringForm.dataset.editId;
+
             const data = {
                 descricao: document.getElementById('recurring-description').value,
                 valor: parseFloat(document.getElementById('recurring-value').value),
                 dia_vencimento: document.getElementById('recurring-due-date').value,
                 account_id: parseInt(document.getElementById('recurring-account').value),
-                category_id: parseInt(document.getElementById('recurring-category').value),
-                ativo: true
+                category_id: parseInt(document.getElementById('recurring-category').value)
             };
 
             let result;
@@ -635,65 +710,31 @@ document.addEventListener('DOMContentLoaded', async () => {
                     body: JSON.stringify(data)
                 });
             }
-            
+
             if (result) {
                 toggleModal(recurringModal, false);
                 recurringForm.reset();
                 delete recurringForm.dataset.editId;
+                
                 recurringModalTitle.textContent = 'Nova Despesa Recorrente';
                 recurringSubmitBtn.textContent = 'Salvar';
+
                 renderRecurringExpenses();
                 renderUpcomingRecurringExpenses();
             }
         });
     }
 
-    if (accountForm) {
-        accountForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const isEdit = accountForm.dataset.editId;
-            const data = {
-                nome: document.getElementById('account-name').value,
-                tipo: document.getElementById('account-type').value,
-                limite: parseFloat(document.getElementById('account-limit').value)
-            };
-            let result;
-
-            if (isEdit) {
-                result = await fetchData(`/api/accounts/${isEdit}`, {
-                    method: 'PUT',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(data)
-                });
-            } else {
-                data.user_id = userId;
-                result = await fetchData('/api/accounts', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(data)
-                });
-            }
-            if (result) {
-                toggleModal(accountModal, false);
-                accountForm.reset();
-                delete accountForm.dataset.editId;
-                accountModalTitle.textContent = 'Nova Conta';
-                accountSubmitBtn.textContent = 'Salvar';
-                renderAccounts();
-                renderAccountsList();
-                renderDashboardSummary();
-            }
-        });
-    }
-    
     if (categoryForm) {
         categoryForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             const isEdit = categoryForm.dataset.editId;
-            const categoryName = document.getElementById('category-name').value;
-        
-            const data = { nome: categoryName };
-        
+
+            const data = {
+                nome: document.getElementById('category-name').value,
+                tipo_gasto: document.getElementById('category-type').value
+            };
+            
             let result;
             if (isEdit) {
                 result = await fetchData(`/api/categories/${isEdit}`, {
@@ -708,30 +749,38 @@ document.addEventListener('DOMContentLoaded', async () => {
                     body: JSON.stringify(data)
                 });
             }
-        
+
             if (result) {
                 toggleModal(categoryModal, false);
                 categoryForm.reset();
                 delete categoryForm.dataset.editId;
+                
                 categoryModalTitle.textContent = 'Nova Categoria';
                 categorySubmitBtn.textContent = 'Salvar';
+
                 renderCategories();
                 renderCategoriesList();
             }
         });
     }
 
-    // Inicialização
-    await renderAccounts();
-    await renderCategories();
-    await renderTransactions();
-    await renderAccountsList();
-    await renderRecurringExpenses();
-    await renderCategoriesList();
-    
-    await renderDashboardSummary();
-    await renderRecentTransactions();
-    await renderUpcomingRecurringExpenses();
+    // Inicialização da página
+    const initialize = async () => {
+        const activeItem = document.querySelector('.side-item-active-page');
 
-    showPage('dashboard');
+        if(activeItem) {
+            showPage(activeItem.dataset.page);
+        }
+        else {
+            showPage('dashboard');
+        }
+    
+        await renderAccounts();
+        await renderCategories();
+        await renderDashboardSummary();
+        await renderRecentTransactions();
+        await renderUpcomingRecurringExpenses();
+    };
+
+    initialize();
 });

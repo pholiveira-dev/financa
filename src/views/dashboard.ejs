@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Minhas Finanças</title>
+    <title>MoneyHub</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="/css/style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -13,15 +13,33 @@
         body {
             font-family: 'Inter', sans-serif;
         }
+        .active-page {
+            background-color: #eef2ff; /* bg-indigo-50 */
+            color: #4f46e5; /* text-indigo-700 */
+            font-weight: 600;
+        }
+        .modal-content {
+            transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+            transform: scale(0.95);
+            opacity: 0;
+        }
+        .modal-content.show {
+            transform: scale(1);
+            opacity: 1;
+        }
+        .table-row-hover:hover {
+            background-color: #f9fafb; /* bg-gray-50 */
+        }
     </style>
+    <script defer src="/js/main.js"></script>
 </head>
 <body class="bg-gray-50 text-gray-800 min-h-screen flex antialiased">
     <script>
-        window.USER_ID = 1; 
+        window.USER_ID = "<%= userId %>"; 
     </script>
 
     <aside class="bg-white text-gray-800 w-64 min-h-screen p-6 flex flex-col shadow-lg">
-        <h1 class="text-3xl font-bold mb-8 text-center text-indigo-700">Finanças</h1>
+        <h1 class="text-3xl font-bold mb-8 text-center text-indigo-700">MoneyHub</h1>
         <nav class="flex-grow">
             <ul>
                 <li class="mb-3">
@@ -36,7 +54,7 @@
                 </li>
                 <li class="mb-3">
                     <a href="#" data-page="recurring" class="sidebar-item block py-3 px-4 rounded-xl transition duration-300 hover:bg-indigo-50 hover:text-indigo-700">
-                        <span class="font-medium">Despesas Recorrentes</span>
+                        <span class="font-medium">Recorrências</span>
                     </a>
                 </li>
                 <li class="mb-3">
@@ -58,10 +76,10 @@
 
     <main class="flex-1 p-8 overflow-y-auto">
         <header class="flex justify-between items-center mb-8">
-            <h1 id="page-title" class="text-4xl font-extrabold text-gray-900"></h1>
+            <h1 id="page-title" class="text-4xl font-extrabold text-gray-900">Dashboard</h1>
         </header>
 
-        <div id="dashboard-page" class="page-content hidden">
+        <section id="dashboard-page" class="page-content">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
                 <div class="bg-white rounded-2xl shadow-lg p-6 transform transition-all duration-300 hover:scale-105 hover:shadow-2xl">
                     <h4 class="text-base font-medium text-gray-500">Saldo Total</h4>
@@ -76,7 +94,7 @@
                     <p id="total-expenses" class="mt-2 text-4xl font-bold text-red-600">R$ 0,00</p>
                 </div>
             </div>
-
+            
             <div class="bg-white rounded-2xl shadow-lg p-8 mb-8">
                 <h3 class="text-xl font-semibold text-gray-800 mb-6">Últimas Transações</h3>
                 <div class="overflow-x-auto">
@@ -97,7 +115,7 @@
             </div>
 
             <div class="bg-white rounded-2xl shadow-lg p-8">
-                <h3 class="text-xl font-semibold text-gray-800 mb-6">Próximas Despesas Recorrentes</h3>
+                <h3 class="text-xl font-semibold text-gray-800 mb-6">Próximas Recorrências</h3>
                 <div class="overflow-x-auto">
                     <table class="min-w-full divide-y divide-gray-200">
                         <thead class="bg-gray-50">
@@ -112,11 +130,11 @@
                         </tbody>
                     </table>
                 </div>
-                <p id="no-upcoming-recurring" class="text-center text-gray-500 hidden mt-6 p-4">Nenhuma despesa recorrente futura.</p>
+                <p id="no-upcoming-recurring" class="text-center text-gray-500 hidden mt-6 p-4">Nenhuma recorrência futura.</p>
             </div>
-        </div>
-
-        <div id="transactions-page" class="page-content hidden">
+        </section>
+        
+        <section id="transactions-page" class="page-content hidden">
             <div class="flex justify-between items-center mb-6">
                 <button id="addTransactionBtn" class="py-3 px-6 bg-indigo-600 text-white rounded-full shadow-lg hover:bg-indigo-700 transform transition-transform duration-200 hover:scale-105">
                     + Nova Transação
@@ -141,12 +159,12 @@
                     </table>
                 </div>
             </div>
-        </div>
+        </section>
         
-        <div id="recurring-page" class="page-content hidden">
+        <section id="recurring-page" class="page-content hidden">
             <div class="flex justify-between items-center mb-6">
                 <button id="addRecurringBtn" class="py-3 px-6 bg-indigo-600 text-white rounded-full shadow-lg hover:bg-indigo-700 transform transition-transform duration-200 hover:scale-105">
-                    + Nova Despesa Recorrente
+                    + Nova Recorrência
                 </button>
             </div>
             <div class="bg-white shadow-lg rounded-2xl overflow-hidden">
@@ -167,9 +185,9 @@
                     </table>
                 </div>
             </div>
-        </div>
+        </section>
         
-        <div id="accounts-page" class="page-content hidden">
+        <section id="accounts-page" class="page-content hidden">
             <div class="flex justify-between items-center mb-6">
                 <h2 class="text-2xl font-bold text-gray-800">Minhas Contas</h2>
                 <button id="addAccountBtn" class="py-3 px-6 bg-indigo-600 text-white rounded-full shadow-lg hover:bg-indigo-700 transform transition-transform duration-200 hover:scale-105">
@@ -178,9 +196,9 @@
             </div>
             <div id="accounts-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             </div>
-        </div>
+        </section>
         
-        <div id="categories-page" class="page-content hidden">
+        <section id="categories-page" class="page-content hidden">
             <div class="p-6">
                 <div class="flex justify-between items-center mb-6">
                     <h2 class="text-2xl font-bold text-gray-800">Minhas Categorias</h2>
@@ -195,7 +213,7 @@
                     <p id="no-categories" class="text-center text-gray-500 hidden mt-6 p-4">Nenhuma categoria encontrada. Adicione uma para começar.</p>
                 </div>
             </div>
-        </div>
+        </section>
     </main>
 
     <div id="transaction-modal" class="fixed inset-0 bg-gray-900 bg-opacity-75 hidden flex items-center justify-center p-4 z-50">
@@ -236,7 +254,7 @@
             </form>
         </div>
     </div>
-
+    
     <div id="recurring-modal" class="fixed inset-0 bg-gray-900 bg-opacity-75 hidden flex items-center justify-center p-4 z-50">
         <div class="bg-white rounded-3xl shadow-2xl p-8 w-full max-w-lg transform transition-all duration-300 scale-95 opacity-0 modal-content">
             <h3 class="text-2xl font-bold text-gray-800 mb-6 text-center">Nova Despesa Recorrente</h3>
@@ -286,7 +304,7 @@
                 </div>
                 <div>
                     <label for="account-limit" class="block text-sm font-medium text-gray-700">Limite de Crédito</label>
-                    <input type="number" step="0.01" id="account-limit" name="limite" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-3 focus:ring-indigo-500 focus:border-indigo-500" required>
+                    <input type="number" step="0.01" id="account-limit" name="limite" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-3 focus:ring-indigo-500 focus:border-indigo-500">
                 </div>
                 <div class="flex justify-end space-x-4 mt-8">
                     <button type="button" id="closeAccountModal" class="py-3 px-6 border border-gray-300 rounded-full text-sm font-medium text-gray-700 hover:bg-gray-100 transition-colors">Cancelar</button>
@@ -296,26 +314,30 @@
         </div>
     </div>
     
-    <div id="category-modal" class="fixed inset-0 bg-gray-900 bg-opacity-75 hidden flex items-center justify-center p-4 z-50">
-        <div class="bg-white rounded-3xl shadow-2xl p-8 w-full max-w-sm transform transition-all duration-300 scale-95 opacity-0 modal-content">
-            <div class="flex justify-between items-center mb-6">
-                <h3 id="category-modal-title" class="text-2xl font-bold text-gray-800">Nova Categoria</h3>
-                <button type="button" id="closeCategoryModal" class="text-gray-400 hover:text-gray-600 transition-colors">
-                    <span class="text-3xl font-light">&times;</span>
-                </button>
+<div id="category-modal" class="fixed inset-0 bg-gray-900 bg-opacity-75 hidden flex items-center justify-center p-4 z-50">
+    <div class="bg-white rounded-3xl shadow-2xl p-8 w-full max-w-sm transform transition-all duration-300 scale-95 opacity-0 modal-content">
+        <h3 id="category-modal-title" class="text-2xl font-bold text-gray-800 mb-6 text-center">Nova Categoria</h3>
+        <form id="category-form" class="space-y-6">
+            <div>
+                <label for="category-name" class="block text-sm font-medium text-gray-700">Nome da Categoria</label>
+                <input type="text" id="category-name" name="nome" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-3 focus:ring-indigo-500 focus:border-indigo-500" required>
             </div>
-            <form id="category-form" class="space-y-6">
-                <div>
-                    <label for="category-name" class="block text-sm font-medium text-gray-700">Nome da Categoria</label>
-                    <input type="text" id="category-name" name="nome" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-3 focus:ring-indigo-500 focus:border-indigo-500" required>
-                </div>
-                <div class="flex justify-end space-x-4 mt-8">
-                    <button type="button" id="cancelCategoryBtn" class="py-3 px-6 border border-gray-300 rounded-full text-sm font-medium text-gray-700 hover:bg-gray-100 transition-colors">Cancelar</button>
-                    <button type="submit" id="category-submit-btn" class="py-3 px-6 border border-transparent rounded-full shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 transition-colors">Salvar</button>
-                </div>
-            </form>
-        </div>
+            <div>
+                <label for="category-type" class="block text-sm font-medium text-gray-700">Tipo de Gasto</label>
+                <select id="category-type" name="tipo_gasto" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-3 focus:ring-indigo-500 focus:border-indigo-500" required>
+                    <option value="" disabled selected>Selecione o tipo</option>
+                    <option value="Fixo">Fixo</option>
+                    <option value="Crédito">Crédito</option>
+                    <option value="Débito">Débito</option>
+                </select>
+            </div>
+            <div class="flex justify-end space-x-4 mt-8">
+                <button type="button" id="closeCategoryModal" class="py-3 px-6 border border-gray-300 rounded-full text-sm font-medium text-gray-700 hover:bg-gray-100 transition-colors">Cancelar</button>
+                <button type="submit" id="category-submit-btn" class="py-3 px-6 border border-transparent rounded-full shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 transition-colors">Salvar</button>
+            </div>
+        </form>
     </div>
+</div>
     
     <script src="/js/main.js"></script>
 </body>

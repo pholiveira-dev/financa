@@ -15,6 +15,19 @@ async function getTransaction(req, res) {
     }
 }
 
+async function getSumFullEntry(req, res) {
+    try {
+        const { user_id } = req.params;
+
+        const sumEntry = await transactionModel.findTotalEntryValue(user_id);
+
+        res.json(sumEntry);
+
+    } catch (error) {
+        
+    }
+}
+
 // findAllTransactions()
 async function getAllTransactions(req, res) {
     try {
@@ -85,5 +98,6 @@ module.exports = {
     getAllTransactions, 
     deleteTransaction,
     putTransaction,
-    postTransaction
+    postTransaction,
+    getSumFullEntry
 };
