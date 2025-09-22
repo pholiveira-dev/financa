@@ -15,6 +15,6 @@ accountRouter.post('/', accountsController.postAccount);
 accountRouter.put('/:id', accountsController.putAccount);
 
 // DELETE para uma conta
-accountRouter.delete('/:id', accountsController.deleteAccount);
+accountRouter.delete('/:id', accountsController.deletedAccount);
 
 module.exports = accountRouter;
